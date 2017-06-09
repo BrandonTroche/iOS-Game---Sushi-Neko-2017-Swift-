@@ -30,7 +30,19 @@ class GameScene: SKScene {
     var health: CGFloat = 1.0 {
         didSet {
             /* Scale health bar between 0.0 -> 1.0 e.g 0 -> 100% */
+            
+            /* Cap Health */
+            if health > 1.0 { health = 1.0 }
+            
             healthBar.xScale = health
+        }
+    }
+    
+    var scoreLabel: SKLabelNode!
+    
+    var score: Int = 0 {
+        didSet {
+            scoreLabel.text = String(score)
         }
     }
     
@@ -63,6 +75,8 @@ class GameScene: SKScene {
         }
         
         healthBar = childNode(withName: "healthBar") as! SKSpriteNode
+        
+        scoreLabel = childNode(withName: "scoreLabel") as! SKLabelNode
     }
     
     func addRandomPieces(total: Int) {
@@ -140,6 +154,12 @@ class GameScene: SKScene {
             return
             
         }
+        
+        /* Increment Health */
+        health += 0.1
+        
+        /* Increment Score */
+        score += 1
         
         /* Grab sushi piece on top of the base sushi piece, it will always be 'first' */
         if let firstPiece = sushiTower.first as SushiPiece! {
